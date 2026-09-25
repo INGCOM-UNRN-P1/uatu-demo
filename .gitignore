@@ -1,0 +1,12 @@
+# Compilación
+build/
+*.o
+
+# Material criptográfico y reportes de auditoría: nunca se versionan
+*.pem
+secretos/
+uatu_report.md
+uatu_report.json
+reporte.md
+reporte.json
+.uatu-tools/
