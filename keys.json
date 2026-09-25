@@ -1,0 +1,14 @@
+{
+  "version": "1",
+  "teachers": {
+    "demo-p1-2026": {
+      "ed25519_verify_key": "ab53e4392cecf143dba71b76aa9468d7cf1d57a4dceeececcf87f5a5545ecb18",
+      "x25519_encryption_key": "66fb7b7d5e4c927f8470883c5acdcb6370c37c5160704a7e60c9715767de8464",
+      "name": "Docente de demostración - Programación I",
+      "not_after_utc": "2027-03-31T23:59:59Z"
+    }
+  },
+  "root_key_id": "inicial_unrn",
+  "issued_at_utc": "2026-09-25T12:32:34Z",
+  "signature": "96e206b297d646f3e33cbfe344d2878ddff92da8f0e2a6f3b42b6b808507cca6f2abf69cfd8f372a0aaa20f4a0318e9781c7e842cde67ab90db524e0cc2ddf06"
+}
