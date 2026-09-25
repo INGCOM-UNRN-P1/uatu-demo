@@ -68,16 +68,23 @@ Las herramientas docentes se instalan con:
 uv tool install "git+https://github.com/INGCOM-UNRN-P1/uatu-tools"
 ```
 
+Las claves del docente `demo-p1-2026` y la raíz `inicial_unrn` están en el
+almacén de `uatu-admin` (`~/.config/uatu/keys/`) de la máquina de la cátedra:
+
+```bash
+uatu-admin keys list
+uatu-admin keys export demo-p1-2026 -f verify-key
+```
+
 ### Cambiar la ventana u otras reglas
 
 Cualquier cambio en `.uatu.conf` invalida la firma. Después de editarlo hay
-que volver a firmarlo:
+que volver a firmarlo (la clave se toma del almacén según el
+`teacher_key_id` del manifiesto):
 
 ```bash
-uatu-admin sign-config --config .uatu.conf \
-    --key ~/.config/uatu/claves/demo-p1-2026.ed25519.pem --key-id demo-p1-2026
-uatu-admin verify-config --config .uatu.conf \
-    --verify-key ab53e4392cecf143dba71b76aa9468d7cf1d57a4dceeececcf87f5a5545ecb18
+uatu-admin sign-config --config .uatu.conf
+uatu-admin verify-config --config .uatu.conf
 ```
 
 Para un examen real conviene generar claves propias (`uatu-admin keygen`),
@@ -85,26 +92,27 @@ agregarlas al registro institucional y firmarlo con la raíz
 (`uatu-admin registry-add` y `registry-sign`). El registro puede publicarse
 en cualquier URL HTTPS, porque la firma raíz lo protege.
 
+### Configuración en GitHub
+
+```bash
+# Secretos UATU_TEACHER_PUBLIC_KEY y UATU_TEACHER_PRIVATE_KEY del workflow forense
+uatu-admin keys setup-audit demo-p1-2026 --repo INGCOM-UNRN-P1/uatu-demo
+
+# Ramas uatu-audit/** sin borrado ni force-push
+uatu-admin protect-branches --repo INGCOM-UNRN-P1/uatu-demo
+```
+
 ### Evaluación forense
 
-Configurar en el repositorio los secretos:
-
-- `UATU_TEACHER_PUBLIC_KEY`: `ab53e4392cecf143dba71b76aa9468d7cf1d57a4dceeececcf87f5a5545ecb18`
-- `UATU_TEACHER_PRIVATE_KEY`: contenido de `~/.config/uatu/claves/demo-p1-2026.x25519.pem`
-
-y ejecutar el workflow *Evaluación Forense Uatu* (para todos o para un
-usuario). Localmente:
+Ejecutar el workflow *Evaluación Forense Uatu* (para todos o para un
+usuario) o, localmente:
 
 ```bash
 git fetch origin '+refs/heads/uatu-audit/*:refs/remotes/origin/uatu-audit/*'
-uatu-audit --repo . \
-    --teacher-key ab53e4392cecf143dba71b76aa9468d7cf1d57a4dceeececcf87f5a5545ecb18 \
-    --decrypt-key ~/.config/uatu/claves/demo-p1-2026.x25519.pem \
-    --md-out reporte.md
+uatu-audit --repo . --md-out reporte.md
 ```
 
 Códigos de salida: `0` sin anomalías, `1` falla de integridad, `2` alertas
 heurísticas (pegados masivos, inserciones externas, extensiones prohibidas).
 
-Para evitar la manipulación de la telemetría, agregar una regla de protección
-de ramas sobre `uatu-audit/**` que impida el force-push y el borrado.
+Guía completa: [manual de uatu](https://github.com/INGCOM-UNRN-P1/uatu/blob/main/manual/index.md).
